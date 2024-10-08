@@ -16,7 +16,7 @@ class Wave2D:
         y = np.linspace(0, 1, self.N+1)
         mesh = np.meshgrid(x, y, indexing='ij')
         self.xij, self.yij = mesh
-        return self.h
+        
 
     def D2(self, N):
         """Return second order differentiation matrix"""
@@ -213,10 +213,7 @@ class Wave2D_Neumann(Wave2D):
         self.Unm1[:] = sp.lambdify((x, y), self.ue(mx, my).subs(t, 0))(self.xij, self.yij)
         self.Un[:] = self.Unm1[:] + 0.5*(self.c*self.dt)**2*(D2 @ self.Unm1 + self.Unm1 @ D2.T) 
 
-    
 
-        
-        
 
 def test_convergence_wave2d():
     sol = Wave2D()
