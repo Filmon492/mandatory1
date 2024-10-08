@@ -231,10 +231,12 @@ def test_convergence_wave2d_neumann():
     assert abs(r[-1] - 2) < 0.05
 
 
-"""
+
 def test_exact_wave2d():
      
      solD= Wave2D()
-     D_s= solD(N=10, Nt=1, cfl=np.sqrt(2), c=1.0, mx=3, my=3, store_data=-1)
-     dt= solD.dt
-     assert solD.l2_error(D_s, dt) < 1/ 10**12 """
+     solN= Wave2D_Neumann()
+     h, l2_error_D = solD(N = 10, Nt=20, cfl=1/np.sqrt(2), c=1.0, mx=3, my=3, store_data=-1)
+     h, l2_error_N = solN(N = 10, Nt=20, cfl=1/np.sqrt(2), c=1.0, mx=3, my=3, store_data=-1)
+     assert l2_error_D, l2_error_N  < 1/ 10**12
+     
