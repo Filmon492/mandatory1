@@ -16,6 +16,7 @@ class Wave2D:
         y = np.linspace(0, 1, self.N + 1)
         mesh = np.meshgrid(x, y, indexing="ij")
         self.xij, self.yij = mesh
+        return self.xij , self.yij 
 
     def D2(self, N):
         """Return second order differentiation matrix"""
@@ -240,3 +241,25 @@ def test_exact_wave2d():
      h, l2_error_N = solN(N = 10, Nt=20, cfl=1/np.sqrt(2), c=1.0, mx=3, my=3, store_data=-1)
      assert l2_error_D, l2_error_N  < 1/ 10**12
      
+mesh = Wave2D()
+data= mesh(N = 10, Nt=5, cfl=1/np.sqrt(2), c=1.0, mx=3, my=3, store_data=1)
+xij, yij = mesh.create_mesh(10)
+key_0= list(data.keys())[0]
+
+from matplotlib import cm
+import matplotlib.animation as animation
+
+fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+#surf = ax.plot_surface(xij, yij, data[key_0], cmap=cm.coolwarm,
+                       #linewidth=0, antialiased=False)
+ax.set_zlim(-1, 1)
+#fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+frames = []
+for n, val in data.items():
+    frame = ax.plot_surface(xij, yij, val, cmap= cm.coolwarm,  linewidth= 0)
+    frames.append([frame])
+
+ani = animation.ArtistAnimation(fig, frames, interval=400, blit=True,
+                                repeat_delay=1000)
+ani.save('neumannwave.gif', writer='pillow', fps=5) 
+plt.show()
